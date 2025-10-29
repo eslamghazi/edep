@@ -1,0 +1,14 @@
+# Auto-detect text files and normalize line endings
+* text=auto eol=lf
+
+# Syntax-specific diff settings
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+
+# Export-ignore for files that should not appear in archives
+/.github export-ignore
+CHANGELOG.md export-ignore
+.styleci.yml export-ignore
