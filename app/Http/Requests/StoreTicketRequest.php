@@ -28,7 +28,7 @@ class StoreTicketRequest extends FormRequest
             'department_id' => 'required|numeric',
             'description' => 'nullable|string',
             'requester_name' => 'required|string',
-            'phone' => 'required|string|regex:/^966[0-9]{9}$/',
+            'phone' => 'required|string|regex:/^\+?966[0-9]{9}$/',
             'email' => 'nullable|email',
             'image' => 'nullable|image',
         ];

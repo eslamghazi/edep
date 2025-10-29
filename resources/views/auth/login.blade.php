@@ -26,11 +26,14 @@
                                 </span>
                             @enderror
                         </div>
-                        <div class="form-group">
+                        <div class="form-group position-relative">
                             <label for="password" class="form-label">كلمة المرور :</label>
                             <input id="password" type="password"
                                 class="form-control @error('password') is-invalid @enderror" name="password" required
                                 autocomplete="current-password">
+                            <span class="position-absolute" style="left: 10px; top: 38px; cursor: pointer;" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </span>
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -56,4 +59,24 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+<script>
+    $(document).ready(function() {
+        $('#togglePassword').click(function() {
+            const passwordField = $('#password');
+            const passwordFieldType = passwordField.attr('type');
+            const icon = $(this).find('i');
+
+            if (passwordFieldType === 'password') {
+                passwordField.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                passwordField.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+    });
+</script>
 @endsection

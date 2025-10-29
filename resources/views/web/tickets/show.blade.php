@@ -1,4 +1,5 @@
 @extends('web.layout')
+@use('Illuminate\Support\Str')
 
 @section('content')
 <div class="request">
@@ -195,7 +196,7 @@
                         <div class="input-group" dir="ltr">
                             <span class="input-group-text">+966</span>
                             <input type="text" class="form-control @error('phone') is-invalid @enderror"
-                                id="phone_display" value="{{ old('phone', $ticket->phone) ? substr(old('phone', $ticket->phone), 3) : '' }}" maxlength="9" minlength="9" pattern="[0-9]*" inputmode="numeric" disabled>
+                                id="phone_display" value="{{ old('phone', $ticket->phone) ? (Str::startsWith(old('phone', $ticket->phone), '+') ? substr(old('phone', $ticket->phone), 4) : substr(old('phone', $ticket->phone), 3)) : (isset($ticket->phone) ? (Str::startsWith($ticket->phone, '+') ? substr($ticket->phone, 4) : substr($ticket->phone, 3)) : '') }}" maxlength="9" minlength="9" pattern="[0-9]*" inputmode="numeric" disabled>
                         </div>
                         @error('phone')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -327,7 +328,7 @@
                 $('.phone-error').text(errorMessage);
             } else {
                 // Update the hidden full phone field
-                $('#full_phone').val('966' + phoneValue);
+                $('#full_phone').val('+966' + phoneValue);
             }
         });
 
