@@ -59,6 +59,9 @@ return [
 
     // Review page
     'review_submitted' => 'Review Submitted',
+    'review_not_available' => 'Review Not Available',
+    'review_requires_technician' => 'Ticket must have an assigned technician',
+    'review_requires_closed_ticket' => 'Ticket must be closed',
     'review_already_submitted' => 'You have already submitted a review for this technician.',
     'criteria' => 'Criteria',
     'rating' => 'Rating',

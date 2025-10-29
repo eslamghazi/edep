@@ -17,7 +17,6 @@
         </div>
         <div class="p-form">
 
-            @if($ticket->status != 'closed')
             <div class=" row">
                 <div class="col-md-6" style="text-align: center">
                     <a href="#editForm" type="submit" id="edit" class="btn text-light" style="width: auto;">{{ __('tickets.edit_request') }}</a>
@@ -26,10 +25,18 @@
                     <a href="{{route('ticket.close',$ticket->id)}}" class="btn text-light" style="width: auto;">{{ __('tickets.close_request') }}</a>
                 </div> --}}
                 <div class="col-md-6" style="text-align: center">
-                    <a href="{{ route('tickets.review') }}?id={{ $ticket->id }}" class="btn btn-info" style="width: auto; background: #17a2b8">{{ __('tickets.review_technician') }}</a>
+                    @php
+                        // Check if ticket can be reviewed (has technician and is closed)
+                        $canReview = $ticket->user_id && $ticket->status === 'Closed';
+                    @endphp
+                    <a href="{{ $canReview ? route('tickets.review', ['id' => $ticket->id]) : '#' }}"
+                       class="btn {{ $canReview ? 'btn-info' : 'btn-secondary disabled' }}"
+                       style="width: auto; {{ $canReview ? 'background: #17a2b8' : 'cursor: not-allowed;' }}"
+                       {{ $canReview ? '' : 'aria-disabled="true"' }}>
+                        {{ __('tickets.review_technician') }}
+                    </a>
                 </div>
             </div>
-            @endif
             <div class="form">
 
                 <div class="row g-5">

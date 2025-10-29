@@ -59,6 +59,9 @@ return [
 
     // Review page
     'review_submitted' => 'تم إرسال التقييم',
+    'review_not_available' => 'التقييم غير متوفر',
+    'review_requires_technician' => 'يجب أن يكون للطلب فني مخصص',
+    'review_requires_closed_ticket' => 'يجب أن يكون الطلب مغلق',
     'review_already_submitted' => 'لقد قمت بالفعل بإرسال تقييم لهذا الفني.',
     'criteria' => 'المعايير',
     'rating' => 'التقييم',
