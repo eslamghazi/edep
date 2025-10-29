@@ -157,10 +157,12 @@ class TicketController extends Controller
         // Determine which phone to send SMS to based on recipient type
         if ($recipientType === 'requester') {
             // Send to the requester's phone from ticket
-            $this->ticketService->sendCloseCodeSms($ticket, $ticket->phone);
+            #TODO: Active this Later
+            //$this->ticketService->sendCloseCodeSms($ticket, $ticket->phone);
         } elseif ($recipientType === 'anas') {
             // Send to أ/أنس phone
-            $this->ticketService->sendCloseCodeSms($ticket, '+966554843474');
+             #TODO: Active this Later
+            //$this->ticketService->sendCloseCodeSms($ticket, '+966554843474');
         }
 
         // Always send email to ticket email
@@ -185,7 +187,8 @@ class TicketController extends Controller
         $ticket->update(['close_code' => $close_code]);
 
         // Send SMS and email
-        $this->ticketService->sendCloseCodeSms($ticket);
+         #TODO: Active this Later
+        //$this->ticketService->sendCloseCodeSms($ticket);
         SendCloseTicketEmail::dispatch([$ticket->email], $ticket);
 
         return response()->json(['message' => 'Ticket closed successfully']);
