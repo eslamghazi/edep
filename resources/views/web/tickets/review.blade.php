@@ -253,7 +253,7 @@
                         </div>
                     </div>
 
-                    <form method="POST" action="{{ route('tickets.review.store') }}" class="needs-validation" novalidate>
+                    <form method="POST" action="{{ route('tickets.review.store') }}" class="needs-validation" novalidate id="reviewForm">
                         @csrf
                         <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
 
@@ -272,7 +272,7 @@
                                             <strong>{{ __('tickets.professionalism') }}</strong>
                                         </td>
                                         <td>
-                                            <select name="professionalism" class="form-select @error('professionalism') is-invalid @enderror" required>
+                                            <select name="professionalism" class="form-select @error('professionalism') is-invalid @enderror" required id="professionalism">
                                                 <option value="">{{ __('tickets.select_rating') }}</option>
                                                 @for($i = 0; $i <= 5; $i++)
                                                     <option value="{{ $i }}" {{ old('professionalism') == $i ? 'selected' : '' }}>
@@ -283,6 +283,7 @@
                                             @error('professionalism')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <div class="invalid-feedback professionalism-error"></div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -291,7 +292,7 @@
                                             <strong>{{ __('tickets.response_time') }}</strong>
                                         </td>
                                         <td>
-                                            <select name="response_time" class="form-select @error('response_time') is-invalid @enderror" required>
+                                            <select name="response_time" class="form-select @error('response_time') is-invalid @enderror" required id="response_time">
                                                 <option value="">{{ __('tickets.select_rating') }}</option>
                                                 @for($i = 0; $i <= 5; $i++)
                                                     <option value="{{ $i }}" {{ old('response_time') == $i ? 'selected' : '' }}>
@@ -302,6 +303,7 @@
                                             @error('response_time')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <div class="invalid-feedback response_time-error"></div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -310,7 +312,7 @@
                                             <strong>{{ __('tickets.quality_of_work') }}</strong>
                                         </td>
                                         <td>
-                                            <select name="quality_of_work" class="form-select @error('quality_of_work') is-invalid @enderror" required>
+                                            <select name="quality_of_work" class="form-select @error('quality_of_work') is-invalid @enderror" required id="quality_of_work">
                                                 <option value="">{{ __('tickets.select_rating') }}</option>
                                                 @for($i = 0; $i <= 5; $i++)
                                                     <option value="{{ $i }}" {{ old('quality_of_work') == $i ? 'selected' : '' }}>
@@ -321,6 +323,7 @@
                                             @error('quality_of_work')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <div class="invalid-feedback quality_of_work-error"></div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -329,7 +332,7 @@
                                             <strong>{{ __('tickets.communication') }}</strong>
                                         </td>
                                         <td>
-                                            <select name="communication" class="form-select @error('communication') is-invalid @enderror" required>
+                                            <select name="communication" class="form-select @error('communication') is-invalid @enderror" required id="communication">
                                                 <option value="">{{ __('tickets.select_rating') }}</option>
                                                 @for($i = 0; $i <= 5; $i++)
                                                     <option value="{{ $i }}" {{ old('communication') == $i ? 'selected' : '' }}>
@@ -340,6 +343,7 @@
                                             @error('communication')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <div class="invalid-feedback communication-error"></div>
                                         </td>
                                     </tr>
                                     <tr style="background-color: #fff3cd;">
@@ -348,7 +352,7 @@
                                             <strong>{{ __('tickets.overall_satisfaction') }}</strong>
                                         </td>
                                         <td>
-                                            <select name="overall_satisfaction" class="form-select @error('overall_satisfaction') is-invalid @enderror" required>
+                                            <select name="overall_satisfaction" class="form-select @error('overall_satisfaction') is-invalid @enderror" required id="overall_satisfaction">
                                                 <option value="">{{ __('tickets.select_rating') }}</option>
                                                 @for($i = 0; $i <= 5; $i++)
                                                     <option value="{{ $i }}" {{ old('overall_satisfaction') == $i ? 'selected' : '' }}>
@@ -359,6 +363,7 @@
                                             @error('overall_satisfaction')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                            <div class="invalid-feedback overall_satisfaction-error"></div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -382,10 +387,11 @@
                             @error('notes')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                            <div class="invalid-feedback notes-error"></div>
                         </div>
 
                         <div class="col-12 mt-4" style="text-align: center">
-                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                            <button type="submit" class="btn btn-primary btn-lg px-5" id="submitReview">
                                 <i class="fas fa-paper-plane {{ app()->getLocale() == 'ar' ? 'ms-2' : 'me-2' }}"></i>{{ __('tickets.submit_review') }}
                             </button>
                         </div>
@@ -406,4 +412,70 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script>
+    $(document).ready(function() {
+        // Add real-time validation for all select fields
+        $('#professionalism, #response_time, #quality_of_work, #communication, #overall_satisfaction').on('change blur', function() {
+            const field = $(this);
+            const fieldName = field.attr('name');
+            const fieldValue = field.val();
+
+            // Clear previous error for this field
+            $(`.${fieldName}-error`).text('');
+            field.removeClass('is-invalid');
+
+            // Validate field
+            if (!fieldValue) {
+                field.addClass('is-invalid');
+                switch(fieldName) {
+                    case 'professionalism':
+                        $(`.${fieldName}-error`).text('{{ __('tickets.validation.professionalism_required') }}');
+                        break;
+                    case 'response_time':
+                        $(`.${fieldName}-error`).text('{{ __('tickets.validation.response_time_required') }}');
+                        break;
+                    case 'quality_of_work':
+                        $(`.${fieldName}-error`).text('{{ __('tickets.validation.quality_of_work_required') }}');
+                        break;
+                    case 'communication':
+                        $(`.${fieldName}-error`).text('{{ __('tickets.validation.communication_required') }}');
+                        break;
+                    case 'overall_satisfaction':
+                        $(`.${fieldName}-error`).text('{{ __('tickets.validation.overall_satisfaction_required') }}');
+                        break;
+                }
+            }
+        });
+
+        // Add real-time validation for notes field (character limit)
+        $('#notes').on('input blur', function() {
+            const notesValue = $(this).val();
+
+            // Clear previous error
+            $('.notes-error').text('');
+            $(this).removeClass('is-invalid');
+
+            // Validate notes length
+            if (notesValue && notesValue.length > 1000) {
+                $(this).addClass('is-invalid');
+                $('.notes-error').text('{{ __('tickets.validation.notes_max') }}');
+            }
+        });
+
+        // Handle form submission
+        $('#reviewForm').on('submit', function(e) {
+            // Trigger validation on all fields
+            $('#professionalism, #response_time, #quality_of_work, #communication, #overall_satisfaction, #notes').trigger('blur');
+
+            // Check if there are any validation errors
+            if ($('.is-invalid').length > 0) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+</script>
 @endsection

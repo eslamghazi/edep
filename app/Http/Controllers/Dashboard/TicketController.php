@@ -74,7 +74,8 @@ class TicketController extends Controller
         $ticket = $this->ticketService->createTicket($attributes);
 
         // send sms message for customer and super admin
-        $this->ticketService->sendNewTicketSms($ticket);
+        #TODO: Active this Later
+        //$ticketService->sendNewTicketSms($ticket);
 
         SendNewTicketEmail::dispatch([$ticket->email], $ticket);
 
