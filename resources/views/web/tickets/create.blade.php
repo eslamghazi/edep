@@ -257,7 +257,7 @@
             $('.phone-error').text(errorMessage);
         } else {
             // Update the hidden full phone field
-            $('#full_phone').val('+966' + phoneValue);
+            $('#full_phone').val('966' + phoneValue);
         }
     });
 
