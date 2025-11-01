@@ -24,13 +24,10 @@ class HomeController extends Controller
             ->pluck('tickets_count', 'status');
 
         $statusCounts = Ticket::join('users', 'tickets.user_id', '=', 'users.id')
-            ->select('users.name', 'users.id')
-            ->selectRaw('SUM(tickets.status = "inProgress") as inProgressCount')
-            ->selectRaw('SUM(tickets.status = "closed") as closedCount')
-            ->selectRaw('SUM(tickets.status = "close_request") as closeRequestCount')
-            ->selectRaw('SUM(tickets.status = "waiting") as waitingCount')
-            ->selectRaw('COUNT(tickets.id) as ticketsCount')->userRole()
-            ->groupBy('users.id', 'users.name') // Group by user_id and name
+            ->select('users.name', 'users.id', 'users.overall_review')
+            ->selectRaw('COUNT(tickets.id) as ticketsCount')
+            ->userRole()
+            ->groupBy('users.id', 'users.name', 'users.overall_review')
             ->get()->toArray();
 
 
@@ -39,8 +36,10 @@ class HomeController extends Controller
 
         // Iterate over the $statusCounts collection
         foreach ($statusCounts as $statusCount) {
-            $average = ($statusCount['closedCount'] /  $statusCount['ticketsCount']) * 100;
-            $userStatusCounts[$statusCount['name']] = $average;
+            // Use overall_review if available, otherwise default to 0
+            $overallReview = $statusCount['overall_review'] ?? 0;
+            // Convert 0-5 rating to 0-100 percentage
+            $userStatusCounts[$statusCount['name']] = (float)($overallReview * 20);
         }
 
         $ticketsChart = new DashboardHomeChart();
@@ -85,7 +84,7 @@ class HomeController extends Controller
 
         $usersChart->height(250);
         $usersChart->labels(array_keys($userStatusCounts));
-        $usersChart->dataset('قياس اداء الفنيين %', 'bar', array_values($userStatusCounts))->backgroundColor(['red', '#ffc107', '#28a745', '#343a40']);
+        $usersChart->dataset('تقييم الفنيين %', 'bar', array_values($userStatusCounts))->backgroundColor(['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']);
 
 
         return view('dashboard.home.index', [

@@ -380,7 +380,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-info text-white">
-                <h5 class="modal-title" id="reviewModalLabel"><i class="fas fa-star"></i> تقييم الفني</h5>
+                <h5 class="modal-title" id="reviewModalLabel"><i class="fas fa-star"></i> <span id="technicianName"></span></h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -490,15 +490,22 @@
             success: function(response) {
                 if (response.review) {
                     let review = response.review;
+                    let ticket = response.ticket;
+
+                    // Display technician name
+                    if (ticket && ticket.user) {
+                        $('#technicianName').text('تقييم ' + ticket.user.name);
+                    } else {
+                        $('#technicianName').text('تقييم الفني');
+                    }
 
                     // Calculate average rating
                     let avgRating = (
-                        (review.professionalism || 0) +
+                        (review.service_quality || 0) +
                         (review.response_time || 0) +
-                        (review.quality_of_work || 0) +
-                        (review.communication || 0) +
-                        (review.overall_satisfaction || 0)
-                    ) / 5;
+                        (review.technician_behavior || 0) +
+                        (review.technician_competence || 0)
+                    ) / 4;
 
                     // Display average rating
                     $('#avgRating').text(avgRating.toFixed(1) + '/5');
@@ -517,11 +524,10 @@
                     // Build review table
                     let tableHtml = '';
                     let criteria = [
-                        { name: 'الاحترافية', value: review.professionalism, color: 'primary', icon: 'fa-user-check' },
-                        { name: 'وقت الاستجابة', value: review.response_time, color: 'info', icon: 'fa-clock' },
-                        { name: 'جودة العمل', value: review.quality_of_work, color: 'success', icon: 'fa-tools' },
-                        { name: 'التواصل', value: review.communication, color: 'warning', icon: 'fa-comments' },
-                        { name: 'الرضا العام', value: review.overall_satisfaction, color: 'success', icon: 'fa-smile' }
+                        { name: 'جودة خدمة الصيانة بشكل عام', value: review.service_quality, color: 'primary', icon: 'fa-star' },
+                        { name: 'سرعة استجابة الشركة', value: review.response_time, color: 'info', icon: 'fa-clock' },
+                        { name: 'تعامل الفني', value: review.technician_behavior, color: 'success', icon: 'fa-handshake' },
+                        { name: 'كفاءة الفني', value: review.technician_competence, color: 'warning', icon: 'fa-tools' }
                     ];
 
                     criteria.forEach(function(item, index) {
@@ -534,13 +540,44 @@
                             }
                         }
 
-                        let rowClass = (index === criteria.length - 1) ? 'style="background-color: #fff3cd;"' : '';
-                        tableHtml += '<tr ' + rowClass + '>';
+                        tableHtml += '<tr>';
                         tableHtml += '<td><i class="fas ' + item.icon + ' text-' + item.color + ' mr-2"></i><strong>' + item.name + '</strong></td>';
-                        tableHtml += '<td class="text-center"><span class="badge bg-' + item.color + '" style="font-size: 1.1rem; padding: 0.5rem 1rem;">' + '5/' + (item.value ?? 'N/A') + '</span></td>';
+                        tableHtml += '<td class="text-center"><span class="badge bg-' + item.color + '" style="font-size: 1.1rem; padding: 0.5rem 1rem;">' + (item.value ?? 'N/A') + '/5</span></td>';
                         tableHtml += '<td class="text-center">' + stars + '</td>';
                         tableHtml += '</tr>';
                     });
+
+                    // Add problem resolution status
+                    let problemStatusText = '';
+                    let problemStatusIcon = '';
+                    if (review.problem_solved === 'full') {
+                        problemStatusText = '✅ تم حل المشكلة بالكامل';
+                        problemStatusIcon = 'fa-check-circle';
+                    } else if (review.problem_solved === 'partial') {
+                        problemStatusText = '⚙ تم حل المشكلة جزئيًا';
+                        problemStatusIcon = 'fa-wrench';
+                    } else {
+                        problemStatusText = '❌ لم تحل المشكلة';
+                        problemStatusIcon = 'fa-times-circle';
+                    }
+                    tableHtml += '<tr style="background-color: #fff3cd;">';
+                    tableHtml += '<td><i class="fas ' + problemStatusIcon + ' mr-2"></i><strong>هل تم حل المشكلة؟</strong></td>';
+                    tableHtml += '<td colspan="2" class="text-center">' + problemStatusText + '</td>';
+                    tableHtml += '</tr>';
+
+                    // Add recommendation status
+                    let recommendText = '';
+                    if (review.would_recommend === 'yes') {
+                        recommendText = '✅ نعم بالتأكيد';
+                    } else if (review.would_recommend === 'maybe') {
+                        recommendText = '❔ يمكن';
+                    } else {
+                        recommendText = '❌ لا';
+                    }
+                    tableHtml += '<tr style="background-color: #e8f5e9;">';
+                    tableHtml += '<td><strong>هل تنصح بالشركة</strong></td>';
+                    tableHtml += '<td colspan="2" class="text-center">' + recommendText + '</td>';
+                    tableHtml += '</tr>';
 
                     $('#reviewTableBody').html(tableHtml);
 

@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ticket_id')->constrained()->onDelete('cascade');
-            $table->tinyInteger('professionalism')->unsigned()->nullable()->comment('Rating 0-5');
-            $table->tinyInteger('response_time')->unsigned()->nullable()->comment('Rating 0-5');
-            $table->tinyInteger('quality_of_work')->unsigned()->nullable()->comment('Rating 0-5');
-            $table->tinyInteger('communication')->unsigned()->nullable()->comment('Rating 0-5');
-            $table->tinyInteger('overall_satisfaction')->unsigned()->nullable()->comment('Rating 0-5');
+            $table->string('technician_name')->nullable()->comment('Name of the technician');
+            $table->tinyInteger('service_quality')->unsigned()->nullable()->comment('Rating 1-5');
+            $table->tinyInteger('response_time')->unsigned()->nullable()->comment('Rating 1-5');
+            $table->tinyInteger('technician_behavior')->unsigned()->nullable()->comment('Rating 1-5');
+            $table->tinyInteger('technician_competence')->unsigned()->nullable()->comment('Rating 1-5');
+            $table->enum('problem_solved', ['full', 'partial', 'no'])->nullable()->comment('Problem resolution status');
+            $table->enum('would_recommend', ['yes', 'maybe', 'no'])->nullable()->comment('Recommendation status');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

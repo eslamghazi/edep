@@ -133,11 +133,12 @@ class TicketController extends Controller
     {
         $request->validate([
             'ticket_id' => 'required|exists:tickets,id',
-            'professionalism' => 'required|integer|min:0|max:5',
-            'response_time' => 'required|integer|min:0|max:5',
-            'quality_of_work' => 'required|integer|min:0|max:5',
-            'communication' => 'required|integer|min:0|max:5',
-            'overall_satisfaction' => 'required|integer|min:0|max:5',
+            'service_quality' => 'required|integer|min:1|max:5',
+            'response_time' => 'required|integer|min:1|max:5',
+            'technician_behavior' => 'required|integer|min:1|max:5',
+            'technician_competence' => 'required|integer|min:1|max:5',
+            'problem_solved' => 'required|in:full,partial,no',
+            'would_recommend' => 'required|in:yes,maybe,no',
             'notes' => 'nullable|string|max:1000',
         ]);
 
@@ -150,15 +151,40 @@ class TicketController extends Controller
         }
 
         // Create the review
-        Review::create([
+        $review = Review::create([
             'ticket_id' => $ticket->id,
-            'professionalism' => $request->professionalism,
+            'technician_name' => $ticket->user?->name,
+            'service_quality' => $request->service_quality,
             'response_time' => $request->response_time,
-            'quality_of_work' => $request->quality_of_work,
-            'communication' => $request->communication,
-            'overall_satisfaction' => $request->overall_satisfaction,
+            'technician_behavior' => $request->technician_behavior,
+            'technician_competence' => $request->technician_competence,
+            'problem_solved' => $request->problem_solved,
+            'would_recommend' => $request->would_recommend,
             'notes' => $request->notes,
         ]);
+
+        // Calculate average rating for this review (4 star fields)
+        $reviewAverage = (
+            $request->service_quality +
+            $request->response_time +
+            $request->technician_behavior +
+            $request->technician_competence
+        ) / 4;
+
+        // Update technician's overall review rating
+        if ($ticket->user) {
+            $technician = $ticket->user;
+            $totalReviews = $technician->total_reviews + 1;
+            $currentOverallReview = $technician->overall_review ?? 0;
+
+            // Calculate new overall review (weighted average)
+            $newOverallReview = ($currentOverallReview * ($totalReviews - 1) + $reviewAverage) / $totalReviews;
+
+            $technician->update([
+                'overall_review' => $newOverallReview,
+                'total_reviews' => $totalReviews,
+            ]);
+        }
 
         return redirect()->route('tickets.review', ['id' => $ticket->id])
             ->with('success', __('tickets.review_submitted_successfully'));

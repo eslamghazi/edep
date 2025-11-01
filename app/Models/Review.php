@@ -11,11 +11,13 @@ class Review extends Model
 
     protected $fillable = [
         'ticket_id',
-        'professionalism',
+        'technician_name',
+        'service_quality',
         'response_time',
-        'quality_of_work',
-        'communication',
-        'overall_satisfaction',
+        'technician_behavior',
+        'technician_competence',
+        'problem_solved',
+        'would_recommend',
         'notes'
     ];
 
