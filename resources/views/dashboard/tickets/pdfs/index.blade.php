@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 
 <head>
     <meta charset="UTF-8">
-    <title>Ticket Show</title>
+    <title>تقرير طلبات الصيانة</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         * {
@@ -11,162 +11,272 @@
         }
 
         body {
-            font-size: 7px;
+            font-size: 12px;
             margin: 0;
-            background-color: #fff;
+            background-color: #f5f5f5;
             text-align: right;
+            padding: 10px;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 900px;
             margin: 20px auto;
             background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 5px;
+            border: 2px solid #333;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .content {
-            width: 100%;
-            max-width: 1000px;
-            /* Increased max-width */
-            margin: auto;
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #333;
+            padding-bottom: 15px;
         }
 
-        table {
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .header p {
+            margin: 5px 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .stats-table {
             width: 100%;
-            font-size: 7px;
+            margin: 20px 0;
             border-collapse: collapse;
         }
 
-        th {
-            background-color: #333;
-            /* Dark background for the header */
-            color: white;
-            /* Light text color for contrast */
+        .stats-table th,
+        .stats-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: right;
         }
 
-        th,
-        td {
+        .stats-table th {
+            background-color: #333;
+            color: white;
+            font-weight: bold;
+        }
+
+        .stats-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .stats-table tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        .stat-label {
+            font-weight: bold;
+            width: 50%;
+            color: #333;
+            text-align: left;
+        }
+
+        .stat-value {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            width: 50%;
+        }
+
+        .content-table {
+            width: 100%;
+            font-size: 11px;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .content-table th {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: right;
+            font-weight: bold;
+            border: 1px solid #333;
+        }
+
+        .content-table td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: right;
-            /* Align text to the right for Arabic */
         }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
+        .content-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
 
-        /* Define background colors for each status */
-        .closed td {
+        .content-table tbody tr:hover {
+            background-color: #e8f5e9;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: white;
+            font-size: 10px;
+        }
+
+        .badge-closed {
             background-color: #d9534f;
-            /* Red for closed tickets */
-            color: white;
         }
 
-        .new td {
+        .badge-new {
             background-color: #5cb85c;
-            /* Green for new tickets */
-            color: white;
         }
 
-        .in-progress td {
+        .badge-in-progress {
             background-color: #f0ad4e;
-            /* Orange for in-progress tickets */
-            color: white;
         }
 
+        .badge-waiting {
+            background-color: #5bc0de;
+        }
 
-        /* Add more styling as needed */
+        .badge-close-request {
+            background-color: #d9534f;
+        }
+
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 30px;
+            border-top: 2px solid #333;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .footer a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .container {
+                box-shadow: none;
+                border: none;
+                page-break-inside: avoid;
+            }
+        }
     </style>
 </head>
 
 <body>
-
     <div class="container">
-        <table>
-            <tr>
-                <td>{{ $closedTickets }}</td>
-                <td style="font-weight: bold">طلب مغلق</td>
-            </tr>
-            <tr>
-                <td>{{ $newTickets }}</td>
-                <td style="font-weight: bold">طلب جديد</td>
-            </tr>
-            <tr>
-                <td>{{ $inProgressTickets }}</td>
-                <td style="font-weight: bold">قيد التنفيذ</td>
-            </tr>
+        <div class="header">
+            <h1>📄 تقرير طلبات الصيانة</h1>
+            <p>تاريخ الإعداد: {{ date('Y-m-d H:i') }}</p>
+        </div>
 
-            <tr>
-                <td>{{ $closeRequestTickets }}</td>
-                <td style="font-weight: bold">تم ارسال طلب الإغلاق</td>
-            </tr>
-
-            <tr>
-                <td>{{ $waitingTickets }}</td>
-                <td style="font-weight: bold">بانتظار اعتماد التسعيرة</td>
-            </tr>
-        </table>
-    </div>
-    <div class="content">
-        <table>
+        <table class="stats-table">
             <thead>
                 <tr>
-                    <th>تاريخ الطلب</th>
-                    <th>فني الصيانة</th>
-                    <th>رقم الجوال</th>
-                    <th>حالة الطلب</th>
-                    {{-- <th>اسم المبني</th> --}}
-                    {{-- <th>اسم المدينة</th> --}}
-                    <th>القسم</th>
-                    <th>العطل</th>
-                    <th>نوع الآلة</th>
-                    <th>رقم الآلة</th>
-                    <th>اسم العميل</th>
-                    <th>رقم التذكرة</th>
+                    <th>العدد</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="stat-value">{{ $closedTickets }}</td>
+                    <td class="stat-label">طلبات مغلقة</td>
+                </tr>
+                <tr>
+                    <td class="stat-value">{{ $newTickets }}</td>
+                    <td class="stat-label">طلبات جديدة</td>
+                </tr>
+                <tr>
+                    <td class="stat-value">{{ $inProgressTickets }}</td>
+                    <td class="stat-label">طلبات قيد التنفيذ</td>
+                </tr>
+                <tr>
+                    <td class="stat-value">{{ $closeRequestTickets }}</td>
+                    <td class="stat-label">طلبات بانتظار الإغلاق</td>
+                </tr>
+                <tr>
+                    <td class="stat-value">{{ $waitingTickets }}</td>
+                    <td class="stat-label">طلبات بانتظار الاعتماد</td>
+                </tr>
+                <tr style="background-color: #ffe6e6;">
+                    <td class="stat-value" style="background-color: #ffcccc; color: #991111;">{{ $closedTickets + $newTickets + $inProgressTickets + $closeRequestTickets + $waitingTickets }}</td>
+                    <td class="stat-label" style="color: #991111;"><strong>إجمالي الطلبات</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="content-table">
+            <thead>
+                <tr>
                     <th>#</th>
+                    <th>رقم الطلب</th>
+                    <th>اسم العميل</th>
+                    <th>رقم الجوال</th>
+                    <th>رقم الجهاز</th>
+                    <th>نوع العطل</th>
+                    <th>موديل الجهاز</th>
+                    <th>القسم</th>
+                    <th>الحالة</th>
+                    <th>فني الصيانة</th>
+                    <th>التاريخ</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($tickets as $ticket)
                 <tr>
-                    <td style="font-weight: bold">{{ formatDate($ticket->created_at) }}</td>
-                    <td style="font-weight: bold">{{$ticket->user->name}}</td>
-                    <td style="font-weight: bold" dir="ltr">{{$ticket->phone}}</td>
-                    @if ($ticket->status == 'Closed')
-                    <td style="font-weight: bold" class="text-center"><span class="badge bg-dark">مغلق
-                      </span></td>
-                    @elseif ($ticket->status == 'InProgress')
-                    <td style="font-weight: bold" class="text-center"><span class="badge bg-warning">قيد التنفيذ
-                      </span></td>
-                    @elseif ($ticket->status == 'New')
-                    <td style="font-weight: bold" class="text-center"><span class="badge bg-success">طلب جديد
-                      </span></td>
-                    @elseif ($ticket->status == 'Waiting')
-                    <td style="font-weight: bold" class="text-center"><span class="badge bg-blue">بانتظار اعتماد التسعيرة
-                      </span></td>
-                    @else
-                    <td style="font-weight: bold" class="text-center"><span class="badge bg-danger">تم إرسال طلب الإغلاق
-                      </span></td>
-                    @endif
-                    {{-- <td style="font-weight: bold">{{$ticket->building->name}}</td> --}}
-                    {{-- <td style="font-weight: bold">{{$ticket->city->name}}</td> --}}
-                    <td style="font-weight: bold">{{$ticket->department?->localized_name}}</td>
-                    <td style="font-weight: bold">{{$ticket->problemType->name}}</td>
-                    <td style="font-weight: bold">{{$ticket->printer->name}}</td>
-                    <td style="font-weight: bold">{{$ticket->printer_code}}</td>
-                    <td style="font-weight: bold">{{$ticket->requester_name}}</td>
-                    <td style="font-weight: bold">{{$ticket->ticket_code}}</td>
-                    <td style="font-weight: bold">{{$loop->iteration}}</td>
+                    <td><strong>{{ $loop->iteration }}</strong></td>
+                    <td><strong>{{ $ticket->ticket_code }}</strong></td>
+                    <td>{{ $ticket->requester_name }}</td>
+                    <td dir="ltr">{{ $ticket->phone }}</td>
+                    <td>{{ $ticket->printer_code }}</td>
+                    <td>{{ $ticket->problemType->name }}</td>
+                    <td>{{ $ticket->printer->name }}</td>
+                    <td>{{ $ticket->department?->localized_name ?? 'غير متوفر' }}</td>
+                    <td>
+                        @if ($ticket->status == 'Closed')
+                        <span class="badge badge-closed">مغلق</span>
+                        @elseif ($ticket->status == 'InProgress')
+                        <span class="badge badge-in-progress">قيد التنفيذ</span>
+                        @elseif ($ticket->status == 'New')
+                        <span class="badge badge-new">جديد</span>
+                        @elseif ($ticket->status == 'Waiting')
+                        <span class="badge badge-waiting">انتظار</span>
+                        @else
+                        <span class="badge badge-close-request">إغلاق</span>
+                        @endif
+                    </td>
+                    <td>{{ $ticket->user->name }}</td>
+                    <td>{{ formatDate($ticket->created_at) }}</td>
                 </tr>
+                @endforeach
             </tbody>
-            @endforeach
         </table>
-        <div class="footer">
-            &copy; {{ date('Y') }} <a target="_blank" href="https://medadalaamal.com/">Medad</a>. الحقوق محفوظة
-            لمداد
-        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>&copy; {{ date('Y') }} <a target="_blank" href="https://medadalaamal.com/">نظام مداد</a></strong><br>
+            الحقوق محفوظة للشركة مداد للأعمال</p>
     </div>
 </body>
 

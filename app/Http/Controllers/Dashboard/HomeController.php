@@ -32,7 +32,7 @@ class HomeController extends Controller
             ->selectRaw('COUNT(tickets.id) as ticketsCount')->userRole()
             ->groupBy('users.id', 'users.name') // Group by user_id and name
             ->get()->toArray();
-            
+
 
         // Initialize an empty array to store the results
         $userStatusCounts = [];
@@ -43,8 +43,15 @@ class HomeController extends Controller
             $userStatusCounts[$statusCount['name']] = $average;
         }
 
-        $ticketsChart = new DashboardHomeChart;
+        $ticketsChart = new DashboardHomeChart();
         $ticketsChart->height(250);
+        $ticketsChart->options([
+            'chart' => [
+                'style' => [
+                    'justify-self' => 'left'
+                ]
+            ]
+        ]);
 
         // An associative array mapping English to Arabic status names
         $statusMappings = [

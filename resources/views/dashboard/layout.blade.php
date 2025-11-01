@@ -15,14 +15,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{{asset('assets/dashboard/plugins/fontawesome-free/all.min.css')}}">
     <!-- Theme style -->
-    @if(app()->getLocale() == 'ar')
-
     @vite(['public/assets/dashboard/css/adminlte-rtl.min.css'])
-
-    @else
-    @vite(['public/assets/dashboard/css/adminlte-ltr.min.css'])
-
-    @endif
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <!-- Select2 -->

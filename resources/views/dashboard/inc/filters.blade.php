@@ -125,13 +125,11 @@
                                 <label>حالة الطلب</label>
                                 <select name="status" class="form-control">
                                     <option value="">الجميع</option>
-                                    <option value="new" {{request('status')=='new' ? 'selected' : '' }}>طلب جديد
-                                    </option>
-                                    <option value="inProgress" {{request('status')=='inProgress' ? 'selected' : '' }}>
-                                        قيد
-                                        التنفيذ</option>
-                                    <option value="closed" {{request('status')=='closed' ? 'selected' : '' }}>طلب مغلق
-                                    </option>
+                                    <option value="New" {{request('status')=='New' ? 'selected' : '' }}>طلب جديد</option>
+                                    <option value="InProgress" {{request('status')=='InProgress' ? 'selected' : '' }}>قيد التنفيذ</option>
+                                    <option value="Closed" {{request('status')=='Closed' ? 'selected' : '' }}>طلب مغلق</option>
+                                    <option value="Waiting" {{request('status')=='Waiting' ? 'selected' : '' }}>بانتظار الاعتماد</option>
+                                    <option value="CloseRequest" {{request('status')=='CloseRequest' ? 'selected' : '' }}>طلب إغلاق</option>
                                 </select>
                             </div>
                         </div>

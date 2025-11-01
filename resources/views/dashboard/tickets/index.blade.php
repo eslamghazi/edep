@@ -26,93 +26,86 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-2 col-6">
-                    <!-- small box -->
+                    {{-- small box --}}
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3>{{$ticketsCount}}</h3>
-
                             <p>جميع الطلبات</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <a href="{{route('dashboard.tickets.index')}}" class="small-box-footer">المزيد من المعلومات <i
-                                class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{route('dashboard.tickets.index')}}" class="small-box-footer">المزيد من المعلومات <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <!-- ./col -->
+                {{-- ./col --}}
                 <div class="col-lg-2 col-6">
-                    <!-- small box -->
+                    {{-- small box --}}
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3>{{$newTickets}}<sup style="font-size: 20px"></sup></h3>
-
                             <p>طلب جديد</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{route('dashboard.tickets.index')}}?status=New" class="small-box-footer">عرض التفاصيل <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
                 <div class="col-lg-2 col-6">
-                    <!-- small box -->
+                    {{-- small box --}}
                     <div class="small-box bg-warning">
                         <div class="inner">
                             <h3>{{$inProgressTickets}}<sup style="font-size: 20px"></sup></h3>
-
                             <p>قيد التنفيذ</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{route('dashboard.tickets.index')}}?status=InProgress" class="small-box-footer">عرض التفاصيل <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
                 <div class="col-lg-2 col-6">
-                    <!-- small box -->
+                    {{-- small box --}}
                     <div class="small-box bg-blue">
                         <div class="inner">
                             <h3>{{$waitingTickets}}<sup style="font-size: 20px"></sup></h3>
-
                             <p>بانتظار اعتماد التسعيرة</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{route('dashboard.tickets.index')}}?status=Waiting" class="small-box-footer">عرض التفاصيل <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
                 <div class="col-lg-2 col-6">
-                    <!-- small box -->
+                    {{-- small box --}}
                     <div class="small-box bg-danger">
                         <div class="inner">
                             <h3>{{$closeRequestTickets}}<sup style="font-size: 20px"></sup></h3>
-
-                            <p>تم إرسال طلب الإغلاق</p>
+                            <p>طلب اغلاق</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{route('dashboard.tickets.index')}}?status=CloseRequest" class="small-box-footer">عرض التفاصيل <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
                 <div class="col-lg-2 col-6">
-                    <!-- small box -->
+                    {{-- small box --}}
                     <div class="small-box bg-dark">
                         <div class="inner">
                             <h3>{{$closedTickets}}<sup style="font-size: 20px"></sup></h3>
-
                             <p>طلب مغلق</p>
                         </div>
                         <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                         </div>
-                        <a href="#" class="small-box-footer"><i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="{{route('dashboard.tickets.index')}}?status=Closed" class="small-box-footer">عرض التفاصيل <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
 
@@ -171,7 +164,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($tickets as $ticket)
+                                @foreach ($tickets as $ticket)
                                     <tr>
                                         <td class="text-center">{{$loop->iteration}}</td>
                                         <td class="text-center">{{$ticket->ticket_code}}</td>
@@ -204,76 +197,68 @@
                                         <td class="text-center">{{$ticket->user?->name ?? 'غير متوفر'}}</td>
 
                                         <td class="text-center">
-                                            <div class="btn-group">
-                                                <a href="{{route('dashboard.tickets.show', $ticket->id)}}" class="mr-1 btn btn-sm
-                                                    btn-primary d-flex align-items-center"><i class="fas fa-eye"></i></a>
+                                            <div class="d-flex flex-wrap gap-1" style="gap: 0.25rem;">
+                                                <a href="{{route('dashboard.tickets.show', $ticket->id)}}" class="btn btn-sm btn-primary d-flex align-items-center" style="white-space: normal; "><i class="fas fa-eye"></i></a>
                                                 @role('super-admin|admin')
-                                                <a href="{{route('dashboard.tickets.edit', $ticket->id)}}" class="mr-1 btn btn-sm
-                                                        btn-primary d-flex align-items-center"><i class="fas fa-edit"></i></a>
-                                                <button class="btn btn-danger d-flex align-items-center" type="submit"
-                                                    onclick="removeItem('{{route('dashboard.tickets.destroy',$ticket->id)}}')">
+                                                <a href="{{route('dashboard.tickets.edit', $ticket->id)}}" class="btn btn-sm btn-primary d-flex align-items-center" style="white-space: normal; "><i class="fas fa-edit"></i></a>
+                                                <button class="btn btn-sm btn-danger d-flex align-items-center" type="submit"
+                                                    onclick="removeItem('{{route('dashboard.tickets.destroy',$ticket->id)}}')"
+                                                    style="white-space: normal; ">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                                 @endrole
 
                                                 @hasanyrole('super-admin|admin|user')
-                                                <div class="btn-group">
-                                                    @if(auth()->user()->hasRole('super-admin') || $ticket->report == null)
-                                                    <a href="#" data-toggle="modal" onclick="report('{{ $ticket->id }}', '{{ $ticket->report }}')"
-                                                        data-target="#report" class="ml-1 d-flex align-items-center btn btn-sm btn-primary">
-                                                         <i class="fas fa-plus"></i> تقرير الصيانة
-                                                     </a>
+                                                @if(auth()->user()->hasRole('super-admin') || $ticket->report == null)
+                                                <a href="#" data-toggle="modal" onclick="report('{{ $ticket->id }}', '{{ $ticket->report }}')"
+                                                    data-target="#report" class="btn btn-sm btn-primary d-flex align-items-center" style="white-space: normal; ">
+                                                    <i class="fas fa-plus ms-1"></i><span>تقرير الصيانة</span>
+                                                </a>
                                                 @endif
-                                                </div>
                                                 @endhasanyrole
                                                 @if ($ticket->status != 'Closed')
                                                 @hasanyrole('super-admin')
-                                                <div class="btn-group">
-                                                    <form action="{{route('dashboard.tickets.closeTicket')}}"
-                                                    method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
-                                                        <button type="submit" class="ml-1 btn btn-sm d-flex align-items-center
-                                                        btn-warning"><i class="fas fa-plus"></i>اغلاق طلب
-                                                        الصيانة</button>
-                                                    </form>
-                                                </div>
+                                                <form action="{{route('dashboard.tickets.closeTicket')}}" method="POST" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="ticket_id" value="{{$ticket->id}}">
+                                                    <button type="submit" class="btn btn-sm btn-warning d-flex align-items-center"
+                                                    style="white-space: normal; "><i class="fas fa-plus ms-1"></i><span>اغلاق طلب الصيانة</span></button>
+                                                </form>
                                                 @endhasanyrole
                                                 @hasanyrole('admin|user')
                                                 @if ($ticket->report)
                                                 <a href="#"  id="closeTicketButton" data-ticket-id="{{$ticket->id}}"  data-toggle="modal" onclick="closeTicket('{{$ticket->id}}')"
-                                                    data-target="#close" class="ml-1 btn btn-sm
-                                                    btn-warning"><i class="fas fa-plus"></i>اغلاق طلب
-                                                    الصيانة</a>
+                                                    data-target="#close" class="btn btn-sm btn-warning d-flex align-items-center"
+                                                    style="white-space: normal; "><i class="fas fa-plus ms-1"></i><span>اغلاق طلب الصيانة</span></a>
                                                 @endif
                                                 @endhasanyrole
                                                 @endif
                                                 @hasanyrole('super-admin|admin')
                                                 @if(!$ticket->user_id)
                                                 <a href="#" data-toggle="modal" onclick="assignTo('{{$ticket->id}}')"
-                                                    data-target="#assignTo" class="ml-1 btn btn-sm
-                                                    btn-primary"><i class="fas fa-plus"></i> فني الصيانة </a>
+                                                    data-target="#assignTo" class="btn btn-sm btn-primary d-flex align-items-center"
+                                                    style="white-space: normal; "><i class="fas fa-plus ms-1"></i><span>فني الصيانة</span></a>
                                                 @endif
                                                 @endhasanyrole
 
                                                 {{-- Show Review Button --}}
-                                                <div class="btn-group">
-                                                    @if($ticket->review)
-                                                    <a href="#" data-toggle="modal" onclick="showReview('{{$ticket->id}}')"
-                                                        data-target="#reviewModal" class="ml-1 btn btn-sm btn-info">
-                                                        <i class="fas fa-star"></i> عرض التقييم
-                                                    </a>
-                                                    @else
-                                                    <button class="ml-1 btn btn-sm btn-secondary" disabled>
-                                                        <i class="fas fa-star"></i> عرض التقييم
-                                                    </button>
-                                                    @endif
-                                                </div>
+                                                @if($ticket->review)
+                                                <a href="#" data-toggle="modal" onclick="showReview('{{$ticket->id}}')"
+                                                    data-target="#reviewModal" class="btn btn-sm btn-info d-flex align-items-center"
+                                                    style="white-space: normal; ">
+                                                    <i class="fas fa-star ms-1"></i><span>عرض التقييم</span>
+                                                </a>
+                                                @else
+                                                <button class="btn btn-sm btn-secondary d-flex align-items-center" disabled
+                                                    style="white-space: normal; ">
+                                                    <i class="fas fa-star ms-1"></i><span>عرض التقييم</span>
+                                                </button>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
-                                </tbody>
                                 @endforeach
+                                </tbody>
                                 <form id="deleteItem" action="" method="POST">
                                     @csrf
                                     @method('DELETE')
@@ -465,6 +450,18 @@
     };
 
     $(document).ready(function() {
+        // Initialize DataTables with sorting only (no search)
+        $('#tickets').DataTable({
+            'paging': false,      // Disable DataTables pagination (using Laravel pagination)
+            'searching': false,   // Disable search (using filters above)
+            'ordering': true,     // Enable column sorting
+            'info': false,        // Disable table info display
+            'autoWidth': false,   // Disable auto width calculation
+            'columnDefs': [
+                { 'orderable': false, 'targets': [-1] } // Disable sorting on first (#) and last (actions) columns
+            ]
+        });
+
         $('#closeTicketButton').one('click', function() {
             var ticketId = $(this).data('ticket-id');
 
