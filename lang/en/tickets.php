@@ -97,6 +97,7 @@ return [
     'optional' => 'Optional',
     'no_notes_provided' => 'No additional notes provided.',
     'return_to_details' => 'Return to Ticket Details',
+    'success_request_sent' => 'Your request has been sent successfully',
     'validation' => [
         'printer_code_required' => 'Printer maintenance number is required',
         'printer_code_numeric' => 'Printer maintenance number must be numeric',

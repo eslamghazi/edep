@@ -50,7 +50,7 @@ class TicketController extends Controller
 
         SendNewTicketEmail::dispatch($emails, $ticket);
 
-        return redirect()->route('ticket.details', $ticket->id)->with('success', 'تم ارسال طلبك بنجاح');
+        return redirect()->route('ticket.details', $ticket->id)->with('success', __('tickets.success_request_sent'));
     }
 
     /**

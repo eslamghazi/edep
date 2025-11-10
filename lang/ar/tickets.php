@@ -97,6 +97,7 @@ return [
     'optional' => 'اختياري',
     'no_notes_provided' => 'لم يتم تقديم ملاحظات إضافية.',
     'return_to_details' => 'عودة إلى تفاصيل التذكرة',
+    'success_request_sent' => 'تم ارسال طلبك بنجاح',
     'validation' => [
         'printer_code_required' => 'رقم الصيانة للطابعة مطلوب',
         'printer_code_numeric' => 'رقم الصيانة للطابعة يجب أن يكون رقماً',
