@@ -137,8 +137,7 @@ class TicketController extends Controller
             'response_time' => 'required|integer|min:1|max:5',
             'technician_behavior' => 'required|integer|min:1|max:5',
             'technician_competence' => 'required|integer|min:1|max:5',
-            'problem_solved' => 'required|in:full,partial,no',
-            'would_recommend' => 'required|in:yes,maybe,no',
+            'problem_solved' => 'required|in:full,partial,no,yes_certainly',
             'notes' => 'nullable|string|max:1000',
         ]);
 
@@ -159,7 +158,6 @@ class TicketController extends Controller
             'technician_behavior' => $request->technician_behavior,
             'technician_competence' => $request->technician_competence,
             'problem_solved' => $request->problem_solved,
-            'would_recommend' => $request->would_recommend,
             'notes' => $request->notes,
         ]);
 

@@ -1,7 +1,19 @@
 <!-- @format -->
 
 <!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
+@php
+    $forceArabicRtl = request()->is('dashboard*')
+        || request()->is('login')
+        || request()->is('register')
+        || request()->is('password*')
+        || request()->is('forgot-password')
+        || request()->is('reset-password')
+        || request()->is('verify-email')
+        || request()->is('email*');
+    $langAttr = $forceArabicRtl ? 'ar' : app()->getLocale();
+    $dirAttr = $forceArabicRtl ? 'rtl' : (app()->getLocale() == 'ar' ? 'rtl' : 'ltr');
+@endphp
+<html lang="{{ $langAttr }}" dir="{{ $dirAttr }}">
 
 <head>
     <meta charset="UTF-8" />
@@ -18,8 +30,18 @@
 </head>
 
 <body>
-    {{-- Language Switcher - Show everywhere except dashboard routes --}}
-    @unless(request()->is('dashboard*'))
+    {{-- Language Switcher - Hide on dashboard and auth routes only --}}
+    @php
+        $hideLangSwitcher = request()->is('dashboard*')
+            || request()->is('login')
+            || request()->is('register')
+            || request()->is('password*')
+            || request()->is('forgot-password')
+            || request()->is('reset-password')
+            || request()->is('verify-email')
+            || request()->is('email*');
+    @endphp
+    @unless($hideLangSwitcher)
         @include('web.partials.language-switcher')
     @endunless
     {{-- <div class='container'> --}}

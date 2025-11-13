@@ -284,7 +284,7 @@
     <div class="modal-dialog " role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ __('توكيل فني الصيانة') }}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">توكيل فني الصيانة</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -296,7 +296,7 @@
                     <input type="hidden" name="ticket_id">
                     <div class="row">
                         <div class="form-group mb-3 col-12">
-                            <label for="user_id">{{ __('اختار فني الصيانة') }}*</label>
+                    <label for="user_id">اختار فني الصيانة*</label>
                             <select name="user_id" class="form-control" required>
                                 @foreach($users as $id => $user)
                                 <option value="{{$id}}">{{$user}}</option>
@@ -306,7 +306,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                        <button type="submit" class="btn btn-primary ">{{__('حفظ')}}</button>
+                    <button type="submit" class="btn btn-primary ">حفظ</button>
                     </div>
                 </form>
             </div>
@@ -319,7 +319,7 @@
     <div class="modal-dialog " role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ __('اغلاق طلب الصيانة') }}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">اغلاق طلب الصيانة</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -336,7 +336,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                        <button type="submit" class="btn btn-primary ">{{__('حفظ')}}</button>
+                    <button type="submit" class="btn btn-primary ">حفظ</button>
                     </div>
                 </form>
             </div>
@@ -360,14 +360,14 @@
                     <input type="hidden" name="ticket_id">
                     <div class="row">
                         <div class="form-group">
-                            <label for="report">{{ __('إضافة تقرير صيانة') }}*</label>
+                <label for="report">إضافة تقرير صيانة*</label>
                             <textarea class="form-control" required rows="4" cols="50" id="report"
                                 name="report"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                        <button type="submit" class="btn btn-primary ">{{__('حفظ')}}</button>
+                <button type="submit" class="btn btn-primary ">حفظ</button>
                     </div>
                 </form>
             </div>
@@ -390,7 +390,7 @@
                 <div class="text-center mb-4 p-4 bg-light rounded">
                     <h3 class="mb-2 text-primary" id="avgRating"></h3>
                     <div class="mb-2" id="avgStars"></div>
-                    <small class="text-muted">متوسط التقييم</small>
+                            <small class="text-muted">متوسط التقييم</small>
                 </div>
 
                 {{-- Review Details Table --}}
@@ -398,7 +398,7 @@
                     <table class="table table-bordered table-hover">
                         <thead class="bg-light">
                             <tr>
-                                <th style="width: 50%"><i class="fas fa-clipboard-list mr-2"></i>المعيار</th>
+                                <th style="width: 50%"><i class="fas fa-clipboard-list mr-2"></i>المعايير</th>
                                 <th style="width: 30%" class="text-center"><i class="fas fa-star mr-2"></i>التقييم</th>
                                 <th style="width: 20%" class="text-center">النجوم</th>
                             </tr>
@@ -525,9 +525,9 @@
                     let tableHtml = '';
                     let criteria = [
                         { name: 'جودة خدمة الصيانة بشكل عام', value: review.service_quality, color: 'primary', icon: 'fa-star' },
-                        { name: 'سرعة استجابة الشركة', value: review.response_time, color: 'info', icon: 'fa-clock' },
-                        { name: 'تعامل الفني', value: review.technician_behavior, color: 'success', icon: 'fa-handshake' },
-                        { name: 'كفاءة الفني', value: review.technician_competence, color: 'warning', icon: 'fa-tools' }
+                        { name: 'سرعة استجابة الشركة لطلب الصيانة', value: review.response_time, color: 'info', icon: 'fa-clock' },
+                        { name: 'تعامل الفني أثناء الخدمة (الاحترام، اللباقة، المظهر)', value: review.technician_behavior, color: 'success', icon: 'fa-handshake' },
+                        { name: 'مدى كفاءة الفني في أداء عمله', value: review.technician_competence, color: 'warning', icon: 'fa-tools' }
                     ];
 
                     criteria.forEach(function(item, index) {
@@ -551,33 +551,24 @@
                     let problemStatusText = '';
                     let problemStatusIcon = '';
                     if (review.problem_solved === 'full') {
-                        problemStatusText = '✅ تم حل المشكلة بالكامل';
+                        problemStatusText = '✅ نعم';
+                        problemStatusIcon = 'fa-check-circle';
+                    } else if (review.problem_solved === 'yes_certainly') {
+                        problemStatusText = '🌟 نعم بالتأكيد';
                         problemStatusIcon = 'fa-check-circle';
                     } else if (review.problem_solved === 'partial') {
-                        problemStatusText = '⚙ تم حل المشكلة جزئيًا';
+                        problemStatusText = '⚙ جزئيًا';
                         problemStatusIcon = 'fa-wrench';
                     } else {
-                        problemStatusText = '❌ لم تحل المشكلة';
+                        problemStatusText = '❌ لا';
                         problemStatusIcon = 'fa-times-circle';
                     }
                     tableHtml += '<tr style="background-color: #fff3cd;">';
-                    tableHtml += '<td><i class="fas ' + problemStatusIcon + ' mr-2"></i><strong>هل تم حل المشكلة؟</strong></td>';
+                    tableHtml += '<td><i class="fas ' + problemStatusIcon + ' mr-2"></i><strong>هل تم حل المشكلة بالكامل؟</strong></td>';
                     tableHtml += '<td colspan="2" class="text-center">' + problemStatusText + '</td>';
                     tableHtml += '</tr>';
 
-                    // Add recommendation status
-                    let recommendText = '';
-                    if (review.would_recommend === 'yes') {
-                        recommendText = '✅ نعم بالتأكيد';
-                    } else if (review.would_recommend === 'maybe') {
-                        recommendText = '❔ يمكن';
-                    } else {
-                        recommendText = '❌ لا';
-                    }
-                    tableHtml += '<tr style="background-color: #e8f5e9;">';
-                    tableHtml += '<td><strong>هل تنصح بالشركة</strong></td>';
-                    tableHtml += '<td colspan="2" class="text-center">' + recommendText + '</td>';
-                    tableHtml += '</tr>';
+                    
 
                     $('#reviewTableBody').html(tableHtml);
 
@@ -585,7 +576,7 @@
                     if (review.notes) {
                         $('#reviewNotes').text(review.notes);
                     } else {
-                        $('#reviewNotes').html('<em class="text-muted">لا توجد ملاحظات إضافية</em>');
+                        $('#reviewNotes').html('<em class="text-muted">لم يتم تقديم ملاحظات إضافية.</em>');
                     }
                 }
             },

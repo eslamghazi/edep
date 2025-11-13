@@ -1,31 +1,28 @@
 @extends('web.layout')
 
-
 @section('title')
-Verify Email
+تأكيد البريد الإلكتروني
 @endsection
 
-@section('main')
-<div class="alert alert-success">
-    An verfication Email sent successfully, please check your inbox
-</div>
-
-<div id="contact" class="section">
-    <!-- container -->
-    <div class="container">
-
-        <!-- row -->
-        <div class="row">
-
-            <!-- verify email form -->
-            <div class="col-md-6 col-md-offset-3">
-                <div class="contact-form">
-                    <form action="{{url('/email/verification-notification')}}" method="post">
-                        @csrf
-                        <button type="submit" class="main-button icon-button ">Resend Email</button>
-                    </form>
-                </div>
+@section('content')
+<div class="request form-data">
+    <div class="contain-shadow">
+        <div class="welcome">
+            <div class="row">
+                <img class="head-logo" src="{{ asset('assets/web/logo_web.svg') }}" alt="" />
             </div>
+            <img class="logo" src="{{ asset('assets/web/login.png') }}" alt="" />
+
+            <h1>
+                تم إرسال رسالة التحقق بنجاح، يرجى مراجعة البريد الوارد
+            </h1>
+
+            <form action="{{ url('/email/verification-notification') }}" method="post">
+                @csrf
+                <div class="buttons last">
+                    <button type="submit" class="btn">إعادة إرسال البريد</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

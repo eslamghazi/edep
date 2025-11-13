@@ -209,10 +209,12 @@ class TicketController extends Controller
 
     public function getReview($ticketId)
     {
-        $ticket = Ticket::with('review')->findOrFail($ticketId);
+        // Include soft-deleted tickets to allow reviews for trashed items
+        $ticket = Ticket::withTrashed()->with(['review', 'user'])->findOrFail($ticketId);
 
         return response()->json([
-            'review' => $ticket->review
+            'review' => $ticket->review,
+            'ticket' => $ticket,
         ]);
     }
 

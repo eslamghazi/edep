@@ -17,7 +17,6 @@ class Review extends Model
         'technician_behavior',
         'technician_competence',
         'problem_solved',
-        'would_recommend',
         'notes'
     ];
 

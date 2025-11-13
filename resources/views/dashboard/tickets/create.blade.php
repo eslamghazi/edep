@@ -186,7 +186,7 @@
                 dataType: "json",
                 success: function(data) {
                     $('#building').empty();
-                    $('#building').append('<option value="">{{ __('اختار المبني') }}</option>');
+        $('#building').append('<option value="">اختار المبني</option>');
                     $.each(data, function(key, value) {
                         $('#building').append('<option value="' + key + '">' + value +
                             '</option>');

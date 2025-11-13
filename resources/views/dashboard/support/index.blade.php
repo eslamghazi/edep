@@ -178,13 +178,13 @@
                     <input type="hidden" name="ticket_id">
                     <div class="row">
                         <div class="form-group">
-                            <label for="report">{{ __('إضافة تقرير صيانة') }}*</label>
+                <label for="report">إضافة تقرير صيانة*</label>
                             <textarea class="form-control" required rows="4" cols="50" id="report" name="report"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                        <button type="submit" class="btn btn-primary ">{{__('حفظ')}}</button>
+                <button type="submit" class="btn btn-primary ">حفظ</button>
                     </div>
                 </form>
             </div>
@@ -196,7 +196,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ __('اغلاق طلب الصيانة') }}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">اغلاق طلب الصيانة</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -248,7 +248,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" onclick="backToSelection()">رجوع</button>
-                            <button type="submit" class="btn btn-primary">{{__('حفظ')}}</button>
+                <button type="submit" class="btn btn-primary">حفظ</button>
                         </div>
                     </form>
                 </div>
@@ -272,7 +272,7 @@
                 <div class="text-center mb-4 p-4 bg-light rounded">
                     <h3 class="mb-2 text-primary" id="avgRating"></h3>
                     <div class="mb-2" id="avgStars"></div>
-                    <small class="text-muted">متوسط التقييم</small>
+                            <small class="text-muted">متوسط التقييم</small>
                 </div>
 
                 {{-- Review Details Table --}}
@@ -280,7 +280,7 @@
                     <table class="table table-bordered table-hover">
                         <thead class="bg-light">
                             <tr>
-                                <th style="width: 50%"><i class="fas fa-clipboard-list mr-2"></i>المعيار</th>
+                                <th style="width: 50%"><i class="fas fa-clipboard-list mr-2"></i>المعايير</th>
                                 <th style="width: 30%" class="text-center"><i class="fas fa-star mr-2"></i>التقييم</th>
                                 <th style="width: 20%" class="text-center">النجوم</th>
                             </tr>
@@ -412,14 +412,13 @@ function showReview(ticket_id) {
             if (response.review) {
                 let review = response.review;
 
-                // Calculate average rating
+                // Calculate average rating (aligned with web review inputs)
                 let avgRating = (
-                    (review.professionalism || 0) +
+                    (review.service_quality || 0) +
                     (review.response_time || 0) +
-                    (review.quality_of_work || 0) +
-                    (review.communication || 0) +
-                    (review.overall_satisfaction || 0)
-                ) / 5;
+                    (review.technician_behavior || 0) +
+                    (review.technician_competence || 0)
+                ) / 4;
 
                 // Display average rating
                 $('#avgRating').text(avgRating.toFixed(1) + '/5');
@@ -437,13 +436,12 @@ function showReview(ticket_id) {
 
                 // Build review table
                 let tableHtml = '';
-                let criteria = [
-                    { name: 'الاحترافية', value: review.professionalism, color: 'primary', icon: 'fa-user-check' },
-                    { name: 'وقت الاستجابة', value: review.response_time, color: 'info', icon: 'fa-clock' },
-                    { name: 'جودة العمل', value: review.quality_of_work, color: 'success', icon: 'fa-tools' },
-                    { name: 'التواصل', value: review.communication, color: 'warning', icon: 'fa-comments' },
-                    { name: 'الرضا العام', value: review.overall_satisfaction, color: 'success', icon: 'fa-smile' }
-                ];
+                    let criteria = [
+                        { name: 'جودة خدمة الصيانة بشكل عام', value: review.service_quality, color: 'primary', icon: 'fa-star' },
+                        { name: 'سرعة استجابة الشركة لطلب الصيانة', value: review.response_time, color: 'info', icon: 'fa-clock' },
+                        { name: 'تعامل الفني أثناء الخدمة (الاحترام، اللباقة، المظهر)', value: review.technician_behavior, color: 'success', icon: 'fa-handshake' },
+                        { name: 'مدى كفاءة الفني في أداء عمله', value: review.technician_competence, color: 'warning', icon: 'fa-tools' }
+                    ];
 
                 criteria.forEach(function(item, index) {
                     let stars = '';
@@ -455,22 +453,43 @@ function showReview(ticket_id) {
                         }
                     }
 
-                    let rowClass = (index === criteria.length - 1) ? 'style="background-color: #fff3cd;"' : '';
+                    let rowClass = '';
                     tableHtml += '<tr ' + rowClass + '>';
                     tableHtml += '<td><i class="fas ' + item.icon + ' text-' + item.color + ' mr-2"></i><strong>' + item.name + '</strong></td>';
-                    tableHtml += '<td class="text-center"><span class="badge bg-' + item.color + '" style="font-size: 1.1rem; padding: 0.5rem 1rem;">' + '5/' +  ((item.value ?? 'N/A')) + '</span></td>';
+                    tableHtml += '<td class="text-center"><span class="badge bg-' + item.color + '" style="font-size: 1.1rem; padding: 0.5rem 1rem;">' + ((item.value ?? 'N/A')) + '/5</span></td>';
                     tableHtml += '<td class="text-center">' + stars + '</td>';
                     tableHtml += '</tr>';
                 });
+
+                // Add problem resolution status row
+                let problemStatusText = '';
+                let problemStatusIcon = '';
+                    if (review.problem_solved === 'full') {
+                        problemStatusText = '✅ نعم';
+                        problemStatusIcon = 'fa-check-circle';
+                    } else if (review.problem_solved === 'yes_certainly') {
+                        problemStatusText = '🌟 نعم بالتأكيد';
+                        problemStatusIcon = 'fa-check-circle';
+                    } else if (review.problem_solved === 'partial') {
+                        problemStatusText = '⚙ جزئيًا';
+                        problemStatusIcon = 'fa-wrench';
+                    } else {
+                        problemStatusText = '❌ لا';
+                        problemStatusIcon = 'fa-times-circle';
+                    }
+                    tableHtml += '<tr style="background-color: #fff3cd;">';
+                    tableHtml += '<td><i class="fas ' + problemStatusIcon + ' mr-2"></i><strong>هل تم حل المشكلة بالكامل؟</strong></td>';
+                    tableHtml += '<td colspan="2" class="text-center">' + problemStatusText + '</td>';
+                    tableHtml += '</tr>';
 
                 $('#reviewTableBody').html(tableHtml);
 
                 // Display notes
                 if (review.notes) {
                     $('#reviewNotes').text(review.notes);
-                } else {
-                    $('#reviewNotes').html('<em class="text-muted">لا توجد ملاحظات إضافية</em>');
-                }
+                    } else {
+                        $('#reviewNotes').html('<em class="text-muted">لم يتم تقديم ملاحظات إضافية.</em>');
+                    }
             }
         },
         error: function(xhr) {

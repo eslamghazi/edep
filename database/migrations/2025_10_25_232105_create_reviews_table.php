@@ -19,8 +19,7 @@ return new class extends Migration
             $table->tinyInteger('response_time')->unsigned()->nullable()->comment('Rating 1-5');
             $table->tinyInteger('technician_behavior')->unsigned()->nullable()->comment('Rating 1-5');
             $table->tinyInteger('technician_competence')->unsigned()->nullable()->comment('Rating 1-5');
-            $table->enum('problem_solved', ['full', 'partial', 'no'])->nullable()->comment('Problem resolution status');
-            $table->enum('would_recommend', ['yes', 'maybe', 'no'])->nullable()->comment('Recommendation status');
+            $table->enum('problem_solved', ['full', 'partial', 'no', 'yes_certainly'])->nullable()->comment('Problem resolution status');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

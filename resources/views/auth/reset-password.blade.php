@@ -1,7 +1,7 @@
 @extends('web.layout')
 
 @section('title')
-    Reset Password
+    استعادة كلمة المرور
 @endsection
 
 @section('content')
@@ -14,7 +14,7 @@
                 <img class="logo" src="{{ asset('assets/web/login.png') }}" alt="" />
 
                 <h1>
-                    {{ __('web.forgotPassword') }}
+                    استعادة كلمة المرور
                 </h1>
 
                 @include('web.inc.messages')
@@ -24,9 +24,9 @@
                     <div class="buttons last">
 
                         <div class="form-group">
-                            <label for="email" class="form-label">كلمة المرور :</label>
-                            <input class="form-control" type="email" name="email" placeholder="Email" id="email"
-                                type="email" class="form-control @error('email') is-invalid @enderror" name="email"
+                            <label for="email" class="form-label">البريد الإلكتروني:</label>
+                            <input class="form-control" type="email" name="email" placeholder="البريد الإلكتروني" id="email"
+                                class="form-control @error('email') is-invalid @enderror" name="email"
                                 required>
                             @error('email')
                                 <span class="invalid-feedback" role="alert">
@@ -36,7 +36,7 @@
                         </div>
 
 
-                        <button type="submit" class="btn">{{ __('web.sumitBtn') }}</button>
+                        <button type="submit" class="btn">إرسال الرابط</button>
                     </div>
 
 

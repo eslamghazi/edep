@@ -206,7 +206,7 @@
     <div class="modal-dialog " role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ __('توكيل فني الصيانة') }}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">توكيل فني الصيانة</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -218,7 +218,7 @@
                     <input type="hidden" name="ticket_id">
                     <div class="row">
                         <div class="form-group mb-3 col-12">
-                            <label for="user_id">{{ __('اختار فني الصيانة') }}*</label>
+                    <label for="user_id">اختار فني الصيانة*</label>
                             <select name="user_id" class="form-control" required>
                                 @foreach($users as $id => $user)
                                 <option value="{{$id}}" {{ $ticket->user_id == $id ? 'selected' : '' }}>{{$user}}
@@ -229,7 +229,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                        <button type="submit" class="btn btn-primary ">{{__('حفظ')}}</button>
+                    <button type="submit" class="btn btn-primary ">حفظ</button>
                     </div>
                 </form>
             </div>
@@ -259,7 +259,7 @@
                 dataType: "json",
                 success: function (data) {
                     $('#building').empty();
-                    $('#building').append('<option value="">{{ __('اختار المبني') }}</option>');
+        $('#building').append('<option value="">اختار المبني</option>');
                     $.each(data, function (key, value) {
                         $('#building').append('<option value="' + key + '">' + value + '</option>');
                     });

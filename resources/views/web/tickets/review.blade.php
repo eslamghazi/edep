@@ -224,6 +224,8 @@
                                 <p class="mb-0" style="font-size: 1.1rem;">
                                     @if($existingReview->problem_solved === 'full')
                                         <span class="badge bg-success" style="padding: 0.5rem 1rem;">✅ {{ __('tickets.fully_resolved') }}</span>
+                                    @elseif($existingReview->problem_solved === 'yes_certainly')
+                                        <span class="badge bg-success" style="padding: 0.5rem 1rem;">🌟 {{ __('tickets.yes_certainly') }}</span>
                                     @elseif($existingReview->problem_solved === 'partial')
                                         <span class="badge bg-warning text-dark" style="padding: 0.5rem 1rem;">⚙ {{ __('tickets.partially_resolved') }}</span>
                                     @else
@@ -235,22 +237,7 @@
                     </div>
 
                     {{-- Recommendation Status --}}
-                    <div class="mt-3">
-                        <div class="card border-0" style="background-color: #fff3e0;">
-                            <div class="card-body">
-                                <h6 class="mb-3"><strong><i class="fas fa-thumbs-up text-warning {{ app()->getLocale() == 'ar' ? 'ms-2' : 'me-2' }}"></i>{{ __('tickets.recommend_company') }}</strong></h6>
-                                <p class="mb-0" style="font-size: 1.1rem;">
-                                    @if($existingReview->would_recommend === 'yes')
-                                        <span class="badge bg-success" style="padding: 0.5rem 1rem;">👍 {{ __('tickets.yes_absolutely') }}</span>
-                                    @elseif($existingReview->would_recommend === 'maybe')
-                                        <span class="badge bg-info" style="padding: 0.5rem 1rem;">🤔 {{ __('tickets.maybe') }}</span>
-                                    @else
-                                        <span class="badge bg-danger" style="padding: 0.5rem 1rem;">👎 {{ __('tickets.no') }}</span>
-                                    @endif
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    
 
                     {{-- Notes Section --}}
                     <div class="mt-3">
@@ -359,6 +346,10 @@
                                 <h6 class="mb-3" style="color: #2c3e50; font-weight: 600;"><strong>{{ __('tickets.problem_resolved') }}</strong></h6>
                                 <div class="d-flex gap-3 flex-wrap" style="gap: 1.5rem;">
                                     <label class="resolution-option" style="cursor: pointer; padding: 15px 25px; border: 2px solid #e0e0e0; border-radius: 10px; transition: all 0.3s; background: white;">
+                                        <input type="radio" name="problem_solved" value="yes_certainly" {{ old('problem_solved') == 'yes_certainly' ? 'checked' : '' }} style="margin-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}: 10px;" required>
+                                        <span style="font-size: 1.3rem;">🌟 {{ __('tickets.yes_certainly') }}</span>
+                                    </label>
+                                    <label class="resolution-option" style="cursor: pointer; padding: 15px 25px; border: 2px solid #e0e0e0; border-radius: 10px; transition: all 0.3s; background: white;">
                                         <input type="radio" name="problem_solved" value="full" {{ old('problem_solved') == 'full' ? 'checked' : '' }} style="margin-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}: 10px;" required>
                                         <span style="font-size: 1.3rem;">✅ {{ __('tickets.fully_resolved') }}</span>
                                     </label>
@@ -377,28 +368,7 @@
                                 @enderror
                             </div>
 
-                            {{-- Field 6: Recommendation --}}
-                            <div class="mb-5">
-                                <h6 class="mb-3" style="color: #2c3e50; font-weight: 600;"><strong>{{ __('tickets.recommend_company') }}</strong></h6>
-                                <div class="d-flex gap-3 flex-wrap" style="gap: 1.5rem;">
-                                    <label class="recommend-option" style="cursor: pointer; padding: 15px 30px; border: 2px solid #e0e0e0; border-radius: 10px; transition: all 0.3s; background: white;">
-                                        <input type="radio" name="would_recommend" value="yes" {{ old('would_recommend') == 'yes' ? 'checked' : '' }} style="margin-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}: 10px;" required>
-                                        <span style="font-size: 1.3rem;">👍 {{ __('tickets.yes_absolutely') }}</span>
-                                    </label>
-                                    <label class="recommend-option" style="cursor: pointer; padding: 15px 30px; border: 2px solid #e0e0e0; border-radius: 10px; transition: all 0.3s; background: white;">
-                                        <input type="radio" name="would_recommend" value="maybe" {{ old('would_recommend') == 'maybe' ? 'checked' : '' }} style="margin-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}: 10px;" required>
-                                        <span style="font-size: 1.3rem;">🤔 {{ __('tickets.maybe') }}</span>
-                                    </label>
-                                    <label class="recommend-option" style="cursor: pointer; padding: 15px 30px; border: 2px solid #e0e0e0; border-radius: 10px; transition: all 0.3s; background: white;">
-                                        <input type="radio" name="would_recommend" value="no" {{ old('would_recommend') == 'no' ? 'checked' : '' }} style="margin-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}: 10px;" required>
-                                        <span style="font-size: 1.3rem;">👎 {{ __('tickets.no') }}</span>
-                                    </label>
-                                </div>
-                                <div class="invalid-feedback d-block" id="would_recommend_error" style="display: none !important;"></div>
-                                @error('would_recommend')
-                                    <div class="text-danger mt-2" style="font-size: 0.9rem;"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>
-                                @enderror
-                            </div>
+                            
                         </div>
 
                         {{-- Notes Field --}}
@@ -453,8 +423,7 @@
             'response_time': '{{ __('tickets.response_speed') }} {{ __('tickets.required_field') }}',
             'technician_behavior': '{{ __('tickets.technician_behavior') }} {{ __('tickets.required_field') }}',
             'technician_competence': '{{ __('tickets.technician_competence') }} {{ __('tickets.required_field') }}',
-            'problem_solved': '{{ __('tickets.problem_resolved') }} {{ __('tickets.required_field') }}',
-            'would_recommend': '{{ __('tickets.recommend_company') }} {{ __('tickets.required_field') }}'
+            'problem_solved': '{{ __('tickets.problem_resolved') }} {{ __('tickets.required_field') }}'
         };
 
         // Function to show error
@@ -582,20 +551,7 @@
             validateField('problem_solved');
         });
 
-        // Add hover effects for recommendation options
-        $('.recommend-option').hover(
-            function() { $(this).css({'border-color': '#2196F3', 'background': '#e3f2fd', 'transform': 'scale(1.05)'}); },
-            function() {
-                if (!$(this).find('input').is(':checked')) {
-                    $(this).css({'border-color': '#e0e0e0', 'background': 'white', 'transform': 'scale(1)'});
-                }
-            }
-        );
-        $('.recommend-option input').on('change', function() {
-            $('.recommend-option').css({'border-color': '#e0e0e0', 'background': 'white'});
-            $(this).closest('.recommend-option').css({'border-color': '#2196F3', 'background': '#e3f2fd'});
-            validateField('would_recommend');
-        });
+        // Recommendation input removed; hover and change handlers not needed.
 
         // Submit button hover effect
         $('#submitReview').hover(
@@ -613,7 +569,6 @@
             if (!validateField('technician_behavior')) isValid = false;
             if (!validateField('technician_competence')) isValid = false;
             if (!validateField('problem_solved')) isValid = false;
-            if (!validateField('would_recommend')) isValid = false;
 
             if (!isValid) {
                 e.preventDefault();
