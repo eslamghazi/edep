@@ -34,6 +34,10 @@ return [
         'user' => env('DREAMSA_USER'),
         'secretKey' => env('DREAMSA_SECRET_KEY'),
         'sender' => env('DREAMSA_SENDER'),
-    ]
+    ],
+
+    'support' => [
+        'anas_phone' => env('ANAS_PHONE_NUMBER'),
+    ],
 
 ];

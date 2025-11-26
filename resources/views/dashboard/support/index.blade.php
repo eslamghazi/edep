@@ -219,7 +219,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="otp_recipient" id="anas" value="anas" required>
                                     <label class="form-check-label" for="anas">
-                                        <i class="fas fa-user-tie"></i> أ/أنس - <span class="text-muted" dir="ltr">{{ env('ANAS_PHONE_NUMBER') }}</span>
+                                        <i class="fas fa-user-tie"></i> أ/أنس - <span class="text-muted" dir="ltr">{{ config('services.support.anas_phone') }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -374,7 +374,7 @@ function sendOtpCode() {
     // Prepare data for AJAX request
     let ticket_id = $('#selected_ticket_id').val();
     let recipientName = selectedRecipient === 'requester' ? currentTicketData.name : 'أ/أنس';
-    let recipientPhone = selectedRecipient === 'requester' ? currentTicketData.phone : '{{ env('ANAS_PHONE_NUMBER') }}';
+    let recipientPhone = selectedRecipient === 'requester' ? currentTicketData.phone : '{{ config('services.support.anas_phone') }}';
 
     // Send AJAX request to send OTP (backend will get phone from ticket)
     $.ajax({

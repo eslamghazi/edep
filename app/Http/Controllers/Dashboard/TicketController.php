@@ -162,7 +162,7 @@ class TicketController extends Controller
         } elseif ($recipientType === 'anas') {
             // Send to أ/أنس phone
              #TODO: Active this Later
-            $this->ticketService->sendCloseCodeSms($ticket, env('ANAS_PHONE_NUMBER'));
+            $this->ticketService->sendCloseCodeSms($ticket, config('services.support.anas_phone'));
         }
 
         // Always send email to ticket email
