@@ -41,7 +41,7 @@ class TicketRepository
         $sms = new Dreamsa();
         $sms->send($smsMessage, trim($ticket->phone));
         $sms->send($smsMessage, "966547055710");
-        $sms->send($smsMessage, "966554843474");
+        $sms->send($smsMessage, env('ANAS_PHONE_NUMBER'));
     }
 
     public function sendCloseCodeSms(Ticket $ticket, $phone = null)

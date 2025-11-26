@@ -75,7 +75,7 @@ class TicketController extends Controller
 
         // send sms message for customer and super admin
         #TODO: Active this Later
-        //$ticketService->sendNewTicketSms($ticket);
+        $ticketService->sendNewTicketSms($ticket);
 
         SendNewTicketEmail::dispatch([$ticket->email], $ticket);
 
@@ -158,11 +158,11 @@ class TicketController extends Controller
         if ($recipientType === 'requester') {
             // Send to the requester's phone from ticket
             #TODO: Active this Later
-            //$this->ticketService->sendCloseCodeSms($ticket, $ticket->phone);
+            $this->ticketService->sendCloseCodeSms($ticket, $ticket->phone);
         } elseif ($recipientType === 'anas') {
             // Send to أ/أنس phone
              #TODO: Active this Later
-            //$this->ticketService->sendCloseCodeSms($ticket, '+966554843474');
+            $this->ticketService->sendCloseCodeSms($ticket, env('ANAS_PHONE_NUMBER'));
         }
 
         // Always send email to ticket email
@@ -188,7 +188,7 @@ class TicketController extends Controller
 
         // Send SMS and email
          #TODO: Active this Later
-        //$this->ticketService->sendCloseCodeSms($ticket);
+        $this->ticketService->sendCloseCodeSms($ticket);
         SendCloseTicketEmail::dispatch([$ticket->email], $ticket);
 
         return response()->json(['message' => 'Ticket closed successfully']);
