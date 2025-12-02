@@ -53,4 +53,13 @@ class TicketRepository
         $recipientPhone = $phone ?? $ticket->phone;
         return $sms->send($smsMessage, trim($recipientPhone));
     }
+
+    public function sendReviewSms(Ticket $ticket)
+    {
+        $reviewLink = url('/tickets/review?id=' . $ticket->id);
+        $smsMessage = "تم إغلاق طلب الصيانة رقم {$ticket->ticket_code} بنجاح. نرجو منكم تقييم الخدمة عبر الرابط التالي: {$reviewLink}";
+
+        $sms = new Dreamsa();
+        return $sms->send($smsMessage, trim($ticket->phone));
+    }
 }

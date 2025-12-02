@@ -56,4 +56,9 @@ class TicketService
     {
         return $this->ticketRepository->sendCloseCodeSms($ticket, $phone);
     }
+
+    public function sendReviewSms(Ticket $ticket)
+    {
+        return $this->ticketRepository->sendReviewSms($ticket);
+    }
 }

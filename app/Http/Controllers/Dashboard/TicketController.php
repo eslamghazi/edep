@@ -129,6 +129,10 @@ class TicketController extends Controller
             $ticket->update([
                 'status' => 'closed',
             ]);
+            
+            // Send Review SMS
+            $this->ticketService->sendReviewSms($ticket);
+
             return back()->with('success', 'تمت العملية بنجاح');
         } else {
             // Regular user logic
@@ -136,6 +140,10 @@ class TicketController extends Controller
                 $ticket->update([
                     'status' => 'closed',
                 ]);
+
+                // Send Review SMS
+                $this->ticketService->sendReviewSms($ticket);
+
                 return back()->with('success', 'تمت العملية بنجاح');
             } else {
                 return back()->with('error', 'هذا الرقم غير صحيح ل هذا الطلب');
