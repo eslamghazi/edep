@@ -33,6 +33,7 @@ Route::view('findTicket', 'web.tickets.check')->name('findTicketView');
 Route::post('findTicket', [\App\Http\Controllers\Web\TicketController::class, 'findTicket'])->name('findTicket');
 // details
 Route::get('tickets/review', [\App\Http\Controllers\Web\TicketController::class, 'review'])->name('tickets.review');
+Route::get('r/{id}', function($id) { return redirect()->route('tickets.review', ['id' => $id]); });
 Route::post('tickets/review', [\App\Http\Controllers\Web\TicketController::class, 'storeReview'])->name('tickets.review.store');
 Route::resource('tickets', \App\Http\Controllers\Web\TicketController::class)->except('delete', 'index');
 Route::get('buildingsByCity/{city}', [\App\Http\Controllers\Web\BuildingController::class, 'buildingsByCity']);
