@@ -146,7 +146,12 @@ class TicketController extends Controller
     public function sendCloseOtp(Request $request)
     {
         $ticket = Ticket::findOrFail($request->ticket_id);
-        $recipientType = $request->recipient_type;
+        $recipientTypes = $request->recipient_types;
+        
+        // Ensure it's an array
+        if (!is_array($recipientTypes)) {
+            $recipientTypes = [$recipientTypes];
+        }
 
         // Generate close code if not already generated
         if (!$ticket->close_code) {
@@ -154,12 +159,14 @@ class TicketController extends Controller
             $ticket->update(['close_code' => $close_code]);
         }
 
-        // Determine which phone to send SMS to based on recipient type
-        if ($recipientType === 'requester') {
+        // Send SMS to selected recipients
+        if (in_array('requester', $recipientTypes)) {
             // Send to the requester's phone from ticket
             #TODO: Active this Later
             $this->ticketService->sendCloseCodeSms($ticket, $ticket->phone);
-        } elseif ($recipientType === 'anas') {
+        }
+        
+        if (in_array('anas', $recipientTypes)) {
             // Send to أ/أنس phone
              #TODO: Active this Later
             $this->ticketService->sendCloseCodeSms($ticket, config('services.support.anas_phone'));

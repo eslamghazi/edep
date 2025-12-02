@@ -211,13 +211,19 @@
                             <div class="form-group mb-3 col-12">
                                 <label class="d-block mb-3"><strong>اختر الجهة التي سيتم ارسال رمز التحقق إليها:</strong></label>
                                 <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="otp_recipient" id="requester" value="requester" required>
+                                    <input class="form-check-input" type="checkbox" id="checkAll">
+                                    <label class="form-check-label" for="checkAll">
+                                        <strong>تحديد الكل</strong>
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="otp_recipient[]" id="requester" value="requester">
                                     <label class="form-check-label" for="requester">
                                         <i class="fas fa-user"></i> <strong id="requesterName"></strong> - <span id="requesterPhone" class="text-muted" dir="ltr"></span>
                                     (صاحب الطلب)</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="otp_recipient" id="anas" value="anas" required>
+                                    <input class="form-check-input" type="checkbox" name="otp_recipient[]" id="anas" value="anas">
                                     <label class="form-check-label" for="anas">
                                         <i class="fas fa-user-tie"></i> أ/أنس - <span class="text-muted" dir="ltr">{{ config('services.support.anas_phone') }}</span>
                                     </label>
@@ -315,6 +321,19 @@
 @section('scripts')
 <script>
 $(document).ready(function() {
+    // Check All functionality
+    $('#checkAll').change(function() {
+        $('input[name="otp_recipient[]"]').prop('checked', $(this).prop('checked'));
+    });
+
+    $('input[name="otp_recipient[]"]').change(function() {
+        if ($('input[name="otp_recipient[]"]:checked').length == $('input[name="otp_recipient[]"]').length) {
+            $('#checkAll').prop('checked', true);
+        } else {
+            $('#checkAll').prop('checked', false);
+        }
+    });
+
     // Initialize DataTables with sorting only (no search)
     $('#tickets').DataTable({
         'paging': false,      // Disable DataTables pagination (using Laravel pagination)
@@ -354,7 +373,8 @@ function closeTicket(ticket_id) {
     // Reset modal to step 1
     modal.find('#otpSelectionStep').show();
     modal.find('#otpVerificationStep').hide();
-    modal.find('input[name="otp_recipient"]').prop('checked', false);
+    modal.find('input[name="otp_recipient[]"]').prop('checked', false);
+    modal.find('#checkAll').prop('checked', false);
 
     // Set ticket ID and requester info
     modal.find('#selected_ticket_id').val(ticket_id);
@@ -364,17 +384,28 @@ function closeTicket(ticket_id) {
 };
 
 function sendOtpCode() {
-    let selectedRecipient = $('input[name="otp_recipient"]:checked').val();
+    let selectedRecipients = [];
+    $('input[name="otp_recipient[]"]:checked').each(function() {
+        selectedRecipients.push($(this).val());
+    });
 
-    if (!selectedRecipient) {
-        alert('الرجاء اختيار الجهة التي سيتم إرسال رمز التحقق إليها');
+    if (selectedRecipients.length === 0) {
+        alert('الرجاء اختيار جهة واحدة على الأقل لإرسال رمز التحقق إليها');
         return;
     }
 
     // Prepare data for AJAX request
     let ticket_id = $('#selected_ticket_id').val();
-    let recipientName = selectedRecipient === 'requester' ? currentTicketData.name : 'أ/أنس';
-    let recipientPhone = selectedRecipient === 'requester' ? currentTicketData.phone : '{{ config('services.support.anas_phone') }}';
+    let recipientTextParts = [];
+
+    if (selectedRecipients.includes('requester')) {
+        recipientTextParts.push(currentTicketData.name + ' (' + currentTicketData.phone + ')');
+    }
+    if (selectedRecipients.includes('anas')) {
+        recipientTextParts.push('أ/أنس (' + '{{ config('services.support.anas_phone') }}' + ')');
+    }
+
+    let recipientText = recipientTextParts.join(' و ');
 
     // Send AJAX request to send OTP (backend will get phone from ticket)
     $.ajax({
@@ -383,12 +414,16 @@ function sendOtpCode() {
         data: {
             _token: '{{ csrf_token() }}',
             ticket_id: ticket_id,
-            recipient_type: selectedRecipient
+            recipient_types: selectedRecipients // Send array
         },
         success: function(response) {
             // Show success message and move to step 2
-            $('#sentToRecipient').text(recipientName + ' - ' + recipientPhone);
-            $('#otp_recipient_type').val(selectedRecipient);
+            $('#sentToRecipient').text(recipientText);
+            // We can store the joined types or just one, but for verification logic usually one is enough or we might not need it if verification is generic
+            // But let's store it as a comma separated string or just keep it simple.
+            // The backend verification likely doesn't care WHO it was sent to, just that the code matches.
+            // But let's pass the array or a string representation if needed.
+            $('#otp_recipient_type').val(selectedRecipients.join(',')); 
             $('#otpSelectionStep').hide();
             $('#otpVerificationStep').show();
         },
