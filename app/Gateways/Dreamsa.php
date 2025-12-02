@@ -36,6 +36,8 @@ class Dreamsa implements SMS
         // Using the Http facade to send a POST request
         $response = Http::get($url, $data);
 
+        \Illuminate\Support\Facades\Log::info('Dreamsa SMS Response: ' . $response->body());
+
         // Decoding the JSON response into an array
         $responseCode = $response->json();
 

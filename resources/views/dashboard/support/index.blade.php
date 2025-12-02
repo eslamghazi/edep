@@ -204,6 +204,7 @@
             <div class="modal-body">
                 {{-- Step 1: Select OTP recipient --}}
                 <div id="otpSelectionStep">
+                    <div id="otpError" class="alert alert-danger" style="display: none;"></div>
                     <form id="sendOtpForm">
                         @csrf
                         <input type="hidden" id="selected_ticket_id" name="ticket_id">
@@ -373,6 +374,7 @@ function closeTicket(ticket_id) {
     // Reset modal to step 1
     modal.find('#otpSelectionStep').show();
     modal.find('#otpVerificationStep').hide();
+    modal.find('#otpError').hide().text('');
     modal.find('input[name="otp_recipient[]"]').prop('checked', false);
     modal.find('#checkAll').prop('checked', false);
 
@@ -408,6 +410,7 @@ function sendOtpCode() {
     let recipientText = recipientTextParts.join(' و ');
 
     // Send AJAX request to send OTP (backend will get phone from ticket)
+    $('#otpError').hide().text('');
     $.ajax({
         url: '{{ route("dashboard.tickets.sendCloseOtp") }}',
         method: 'POST',
@@ -417,18 +420,22 @@ function sendOtpCode() {
             recipient_types: selectedRecipients // Send array
         },
         success: function(response) {
-            // Show success message and move to step 2
-            $('#sentToRecipient').text(recipientText);
-            // We can store the joined types or just one, but for verification logic usually one is enough or we might not need it if verification is generic
-            // But let's store it as a comma separated string or just keep it simple.
-            // The backend verification likely doesn't care WHO it was sent to, just that the code matches.
-            // But let's pass the array or a string representation if needed.
-            $('#otp_recipient_type').val(selectedRecipients.join(',')); 
-            $('#otpSelectionStep').hide();
-            $('#otpVerificationStep').show();
+            if (response.success) {
+                // Show success message and move to step 2
+                $('#sentToRecipient').text(recipientText);
+                // We can store the joined types or just one, but for verification logic usually one is enough or we might not need it if verification is generic
+                // But let's store it as a comma separated string or just keep it simple.
+                // The backend verification likely doesn't care WHO it was sent to, just that the code matches.
+                // But let's pass the array or a string representation if needed.
+                $('#otp_recipient_type').val(selectedRecipients.join(',')); 
+                $('#otpSelectionStep').hide();
+                $('#otpVerificationStep').show();
+            } else {
+                $('#otpError').text(response.message).show();
+            }
         },
         error: function(xhr) {
-            alert('حدث خطأ أثناء إرسال رمز التحقق. الرجاء المحاولة مرة أخرى.');
+            $('#otpError').text('حدث خطأ أثناء إرسال رمز التحقق. الرجاء المحاولة مرة أخرى.').show();
         }
     });
 }

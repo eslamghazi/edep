@@ -51,6 +51,6 @@ class TicketRepository
         $sms = new Dreamsa();
         // Use provided phone or default to ticket phone
         $recipientPhone = $phone ?? $ticket->phone;
-        $sms->send($smsMessage, trim($recipientPhone));
+        return $sms->send($smsMessage, trim($recipientPhone));
     }
 }

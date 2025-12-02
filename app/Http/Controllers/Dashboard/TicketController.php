@@ -159,17 +159,34 @@ class TicketController extends Controller
             $ticket->update(['close_code' => $close_code]);
         }
 
+        $errors = [];
+
         // Send SMS to selected recipients
         if (in_array('requester', $recipientTypes)) {
             // Send to the requester's phone from ticket
             #TODO: Active this Later
-            $this->ticketService->sendCloseCodeSms($ticket, $ticket->phone);
+            $response = $this->ticketService->sendCloseCodeSms($ticket, $ticket->phone);
+            $data = $response->getData(true);
+            if (isset($data['status']) && $data['status'] === 'error') {
+                $errors[] = "صاحب الطلب: " . ($data['message'] ?? 'Unknown error');
+            }
         }
         
         if (in_array('anas', $recipientTypes)) {
             // Send to أ/أنس phone
              #TODO: Active this Later
-            $this->ticketService->sendCloseCodeSms($ticket, config('services.support.anas_phone'));
+            $response = $this->ticketService->sendCloseCodeSms($ticket, config('services.support.anas_phone'));
+            $data = $response->getData(true);
+            if (isset($data['status']) && $data['status'] === 'error') {
+                $errors[] = "أ/أنس: " . ($data['message'] ?? 'Unknown error');
+            }
+        }
+
+        if (!empty($errors)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'فشل إرسال الرسالة لـ: ' . implode(', ', $errors)
+            ]);
         }
 
         // Always send email to ticket email
