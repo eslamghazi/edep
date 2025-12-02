@@ -57,7 +57,7 @@ class TicketRepository
     public function sendReviewSms(Ticket $ticket)
     {
         $reviewLink = url('/r/' . $ticket->id);
-        $reviewLink = str_replace(['https://', 'http://'], '', $reviewLink);
+        // $reviewLink = str_replace(['https://', 'http://'], '', $reviewLink);
         $smsMessage = "طلب {$ticket->ticket_code} مغلق. قيمنا: {$reviewLink}";
 
         $sms = new Dreamsa();
